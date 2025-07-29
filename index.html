@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packages Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 40px 0 20px;
+      font-size: 2.5rem;
+      color: #00c9a7;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      margin: 50px auto;
+      width: 90%;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      width: 90%;
+      height: 4px;
+      background: linear-gradient(90deg, #00C9A7, #92FE9D);
+      z-index: 1;
+    }
+
+    .timeline-node {
+      width: 20px;
+      height: 20px;
+      background: #00C9A7;
+      border-radius: 50%;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    /* Card Style */
+    .package-card {
+      background: linear-gradient(145deg, #1b1b1b, #252525);
+      border-radius: 16px;
+      width: 320px;
+      padding: 25px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .package-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .package-card h2 {
+      font-size: 1.8rem;
+      color: #00c9a7;
+      margin-bottom: 10px;
+    }
+
+    .package-card p {
+      font-size: 0.95rem;
+      color: #d4d4d4;
+      line-height: 1.5;
+      margin: 5px 0;
+    }
+
+    .package-card h3 {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      color: #92fe9d;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 8px;
+    }
+
+    .package-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0 20px;
+      color: #e0e0e0;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .package-card ul li {
+      margin: 6px 0;
+    }
+
+    .package-card ul li::before {
+      content: "✔ ";
+      color: #00c9a7;
+    }
+
+    /* Price */
+    .price-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 201, 167, 0.062);
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #00c9a7;
+      margin-bottom: 20px;
+    }
+
+    .price-box i {
+      font-size: 1.4rem;
+      color: #92fe9d;
+    }
+
+    /* Buttons */
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .package-card button {
+      flex: 1;
+      padding: 10px 0;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #00C9A7;
+      border: none;
+      color: #0d0d0d;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #00C9A7;
+      color: #00C9A7;
+    }
+
+    .btn-primary:hover {
+      background:  rgba(0, 201, 167, 0.062);
+    }
+
+    .btn-secondary:hover {
+      background:rgba(0, 201, 167, 0.062);
+      color: #00C9A7;
+      border: 1px solid none;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: #1a1a1a;
+      width: 90%;
+      height: 90%;
+      padding: 30px;
+      border-radius: 15px;
+      overflow-y: auto;
+      animation: scaleUp 0.3s ease forwards;
+      position: relative;
+    }
+
+    .modal h2 {
+      color: #00C9A7;
+      margin-bottom: 15px;
+    }
+
+    .modal ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .modal ul li::before {
+      content: "✓ ";
+      color: #00c9a7;
+    }
+
+    .modal .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media screen and (max-width: 900px) {
+      .timeline {
+        flex-direction: column;
+        align-items: center;
+      }
+      .timeline::before {
+        width: 4px;
+        height: 90%;
+        top: 5%;
+        left: 50%;
+      }
+      .timeline-node {
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+</head>
+<body>
+  <h1>Our Packages</h1>
+  <div class="timeline">
+    <div class="timeline-node"></div>
+    <div class="package-card">
+      <h2>Package One</h2>
+      <p>Includes all three Bistro branches under one TikTok account
+         This means CMC Bambis and Mekanisa  will be managed together
+          as one account</p>
+      <p>Only the GoRedGoRed account remains separate as a single account</p>
+
+         <h3>Total Accounts</h3>
+
+      <h4>Two TikTok accounts</h4>
+
+      <ul>
+        <li>One for all Bistro branches</li>
+        <li>One for GoRedGoRed</li>
+      </ul>
+      
+      <div class="price-box">50,000 birr for the bistro</div>
+      <div class="price-box">30,000 birr for the gored gored</div>
+      <div class="buttons">
+       
+        <button class="btn-secondary" data-modal="modal1b">More</button>
+      </div>
+    </div>
+
+    <div class="timeline-node"></div>
+    <div class="package-card">
+      <h2>Package Two</h2>
+      <p>Includes two of the Bistro branches CMC and 
+        Bambis under one TikTok account</p>
+      <p>Mekanisa branch will have its own separate 
+        TikTok account GoRedGoRed stays as a single account</p>
+
+      <h3>Total Accounts</h3>
+
+       <h4>Three TikTok accounts</h4>
+
+      <ul>
+        <li>One for CMC and Bambis</li>
+        <li>One for Mekanisa</li>
+        <li>One for GoRedGoRed</li>
+      </ul>
+      <div class="price-box">30,000 birr CMC and Bambis</div>
+      <div class="price-box">30,000 birr for mekanisa</div>
+      <div class="price-box">30,000 birr for Goredgored</div>
+      <div class="buttons">
+
+        <button class="btn-secondary" data-modal="modal2b">More</button>
+      </div>
+    </div>
+
+    <div class="timeline-node"></div>
+    <div class="package-card">
+      <h2>Package Three</h2>
+      <p>Each branch will have its own separate TikTok account.</p>
+
+       <ul>
+        <li>One for CMC </li>
+        <li>One for Bambis</li>
+        <li>One for Mekanisa</li>
+        <li>One for GoRedGoRed</li>
+        
+      </ul>
+      
+      <h3>Total Accounts</h3>
+
+      <h4>Four TikTok accounts</h4>
+
+      <div class="price-box">30,000 birr for each</div>
+      <div class="price-box">Total = 120,000 birr</div>
+      <div class="buttons">
+   
+        <button class="btn-secondary" data-modal="modal3b">More</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals (same as before) -->
+  
+
+  <div id="modal1b" class="modal-overlay">
+    <div class="modal">
+      <button class="close-btn">&times;</button>
+      <h2>Reasons to Choose Package One</h2>
+     
+      <ul>
+        <li>Simple and easy to manage with fewer accounts</li>
+       
+      </ul>
+      
+      <ul>
+      
+        <li>Best for saving budget while still having online presence</li>
+
+      </ul>
+
+      <ul>
+       
+        <li>Good starting point for businesses still testing TikTok</li>
+      </ul>
+
+      <ul>
+       
+        <li>Ideal if your focus is on general brand awareness rather than location specific marketing</li>
+      </ul>
+
+
+         <h2>Limitations of Package One</h2>
+
+
+       <ul>
+        <li>All branches under one TikTok account</li>
+      </ul>
+
+       <ul>
+        <li>Audience confusion</li>
+      </ul>
+
+       <ul>
+        <li>Hard to give focus to each branch</li>
+      </ul>
+
+       <ul>
+        <li>Content becomes general and may not connect with all audiences</li>
+      </ul>
+
+    
+    </div>
+  </div>
+
+
+  <div id="modal2b" class="modal-overlay">
+    <div class="modal">
+      <button class="close-btn">&times;</button>
+
+      <h2>Reasons to Choose Package Two</h2>
+
+      <p>CMC and Bambis share one TikTok account, 
+        Mekanisa has its own, GoRedGoRed remains 
+        separate</p>
+
+      <ul>
+        <li>Mekanisa branch will have a chance of getting more effort</li>
+      </ul>
+
+       <ul>
+        <li>Great option to balance between brand identity and budget</li>
+      </ul>
+
+      
+      <h2>Limitations of Package Two</h2>
+
+      <ul>
+        <li>Risk of one branch dominating the content</li>
+      </ul>
+
+      <ul>
+        <li>Audience confusion still possible</li>
+      </ul>
+
+      <ul>
+        <li>Not ideal for building strong independent brand identity for each location</li>
+      </ul>
+      
+    </div>
+  </div>
+
+  
+
+  <div id="modal3b" class="modal-overlay">
+    <div class="modal">
+      <button class="close-btn">&times;</button>
+
+      <h2>Reasons to Choose Package Three</h2>
+
+      <p>Each branch has its own TikTok account</p>
+
+
+      <ul>
+        <li>Each branch can post content that reflects its
+             specific atmosphere food and customers</li>
+      </ul>
+
+       <ul>
+        <li>We can build a loyal following for each location
+             instead of mixing audiences</li>
+      </ul>
+
+
+      <ul>
+        <li>Avoids confusion on the audience </li>
+      </ul>
+
+      <ul>
+        <li>Each branch grows at its own pace and we can compare performance between them</li>
+      </ul>
+
+
+      
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll("[data-modal]");
+    const modals = document.querySelectorAll(".modal-overlay");
+    const closeBtns = document.querySelectorAll(".close-btn");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const modalId = button.getAttribute("data-modal");
+        document.getElementById(modalId).style.display = "flex";
+      });
+    });
+
+    closeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modals.forEach((m) => (m.style.display = "none"));
+      });
+    });
+
+    window.addEventListener("click", (e) => {
+      modals.forEach((modal) => {
+        if (e.target === modal) modal.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>
